@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Employee Generator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        button {
+            padding: 10px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+
+        th,
+        td {
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        #status {
+            margin-top: 12px;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧑‍💼 Employee Generator</h1>
+    <button onclick="generateData()">Generate Data</button>
+    <p id="status"></p>
+    <table id="table" style="display:none">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Salary</th>
+                <th>Language</th>
+                <th>City</th>
+                <th>Manager?</th>
+            </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+    </table>
+
+    <script>
+        async function generateData() {
+            document.getElementById("status").textContent = "Generating...";
+
+            const res = await fetch("/generate", { method: "POST" });
+            const data = await res.json();
+
+            if (!data.success) {
+                document.getElementById("status").textContent = "Error: " + data.error;
+                return;
+            }
+
+            const tbody = document.getElementById("tbody");
+            tbody.innerHTML = "";
+
+            data.employees.forEach(emp => {
+                tbody.innerHTML += `
+          <tr>
+            <td>${emp.name}</td>
+            <td>${emp.salary.toLocaleString()}</td>
+            <td>${emp.language}</td>
+            <td>${emp.city}</td>
+            <td>${emp.isManager ? "✅ Yes" : "❌ No"}</td>
+          </tr>`;
+            });
+
+            document.getElementById("table").style.display = "table";
+            document.getElementById("status").textContent = "✅ 10 employees generated and saved!";
+        }
+    </script>
+</body>
+
+</html>
