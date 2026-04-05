@@ -79,6 +79,16 @@ app.post("/generate", async (req, res) => {
   }
 });
 
+// --- 6. Route: DELETE /clear ---
+app.delete("/clear", async (req,res) =>{
+  try{
+    await Employee.deleteMany({});
+    res.json({ success: true });
+  } catch(err){
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);

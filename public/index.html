@@ -59,6 +59,7 @@
 <body>
     <h1>🧑‍💼 Employee Generator</h1>
     <button onclick="generateData()">Generate Data</button>
+    <button onclick="clearData()">Clear Data</button>
     <p id="status"></p>
     <table id="table" style="display:none">
         <thead>
@@ -101,6 +102,17 @@
 
             document.getElementById("table").style.display = "table";
             document.getElementById("status").textContent = "✅ 10 employees generated and saved!";
+        }
+
+        async function clearData() {
+            const res = await fetch("/clear", { method: "DELETE" });
+            const data = await res.json();
+
+            if (data.success) {
+                document.getElementById("tbody").innerHTML = "";       // clears the table
+                document.getElementById("table").style.display = "none"; // hides the table
+                document.getElementById("status").textContent = "🗑️ Data cleared!";
+            }
         }
     </script>
 </body>
